@@ -19,20 +19,18 @@ const CardList = (props: any) => {
     },
     mobile: {
       breakpoint: { max: 464, min: 0 },
-      items: 1,
+      items: 2,
     },
   };
 
   return (
-    <Carousel responsive={responsive} className="mb-12">
-      {movies.length > 0 ? (
-        movies.map((movie: any) => <Card movie={movie} />)
-      ) : (
-        <>
-          <h1>Loading</h1>
-        </>
-      )}
-    </Carousel>
+    <div className="my-0">
+      <h1 className="ps-2 text-3xl font-semibold">Populer</h1>
+      <Carousel responsive={responsive} className="mb-12">
+        {movies.length > 0 &&
+          movies.map((movie: any) => <Card movie={movie} />)}
+      </Carousel>
+    </div>
   );
 };
 
