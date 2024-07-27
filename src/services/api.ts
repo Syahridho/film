@@ -3,7 +3,7 @@ import axios from "axios";
 const apiKey = import.meta.env.VITE_APP_APIKEY;
 const baseUrl = import.meta.env.VITE_APP_BASEURL;
 
-export const getMovieList = async () => {
+export const getMoviePopular = async () => {
   const movie = await axios.get(
     `${baseUrl}/movie/popular?page=1&api_key=${apiKey}`
   );
@@ -20,4 +20,11 @@ export const searchMovie = async (q: string) => {
 export const getDetailMovie = async (id: string) => {
   const detail = await axios.get(`${baseUrl}/movie/${id}?api_key=${apiKey}`);
   return detail;
+};
+
+export const getMovieList = async () => {
+  const movie = await axios.get(
+    `${baseUrl}/movie/popular?page=2&api_key=${apiKey}`
+  );
+  return movie;
 };
