@@ -8,6 +8,7 @@ import React, { Suspense, useEffect, useState } from "react";
 import { FaXmark } from "react-icons/fa6";
 import CardListSkeleton from "../../components/fragments/CardListSkeleton";
 import CarsList from "../../components/fragments/CarsList";
+import { Link } from "react-router-dom";
 
 const CardListCarousel = React.lazy(
   () => import("../../components/fragments/CardListCarousel")
@@ -53,8 +54,25 @@ const Home = () => {
   }, [search]);
 
   return (
-    <div className="max-w-[1100px] mx-auto ">
-      <div className="h-[80vh] flex flex-col justify-center items-center gap-4">
+    <div className="container max-w-[1000px] mx-auto px-6 md:px-0">
+      <div className="w-full flex justify-between pt-8">
+        <h1 className="ps-2 text-3xl font-bold text-slate-800">Movie Sas</h1>
+        <div className="flex gap-2">
+          <Link
+            to={"/signup"}
+            className="bg-slate-800 text-white px-4 py-1 border border-slate-800 rounded shadow transition duration-500 hover:bg-white hover:text-slate-800 hidden sm:block"
+          >
+            Daftar
+          </Link>
+          <Link
+            to={"/login"}
+            className="bg-white text-slate-800 px-4 py-1 border border-slate-800 rounded shadow transition duration-500 hover:bg-slate-800 hover:text-white"
+          >
+            Masuk
+          </Link>
+        </div>
+      </div>
+      <div className="h-[70vh] flex flex-col justify-center items-center gap-4">
         <h1 className="text-2xl font-semibold mb-6 md:text-3xl">
           Cari film untuk hari ini
         </h1>
