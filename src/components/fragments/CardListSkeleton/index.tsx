@@ -1,7 +1,7 @@
 const CardListSkeleton = (props: any) => {
   const { title } = props;
   return (
-    <div className="my-0">
+    <div className="container max-w-[1000px] mx-auto px-4 xl:px-0 my-0">
       <h1 className="ps-2 text-3xl font-semibold">{title}</h1>
       <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-5 gap-4 animate-pulse my-12">
         <div>

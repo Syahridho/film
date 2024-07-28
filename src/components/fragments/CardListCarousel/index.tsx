@@ -1,8 +1,13 @@
 import Carousel from "react-multi-carousel";
 import Card from "../Card";
 
-const CardListCarousel = (props: any) => {
-  const { movies, title } = props;
+type PropsTypes = {
+  datas: any;
+  title?: string;
+};
+
+const CardListCarousel = (props: PropsTypes) => {
+  const { datas, title } = props;
 
   const responsive = {
     superLargeDesktop: {
@@ -24,12 +29,12 @@ const CardListCarousel = (props: any) => {
   };
 
   return (
-    <div className="my-0">
+    <div className="my-0 container max-w-[1000px] mx-auto px-4 xl:px-0">
       <h1 className="ps-2 text-3xl font-semibold">{title}</h1>
       <Carousel responsive={responsive} className="mb-12">
-        {movies.length > 0 &&
-          movies.map((movie: any, index: any) => (
-            <Card movie={movie} key={index} />
+        {datas?.length > 0 &&
+          datas.map((data: any, index: any) => (
+            <Card movie={data} key={index} />
           ))}
       </Carousel>
     </div>

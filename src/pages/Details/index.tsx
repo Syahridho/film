@@ -1,19 +1,50 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { getDetailMovie } from "../../services/api";
+import { getActorMovie, getDetailMovie } from "../../services/api";
 import roundToOneDecimal from "../../utils/oneDecimal";
 import { FaArrowLeft } from "react-icons/fa6";
+import Carousel from "react-multi-carousel";
 
 const Details = () => {
   const { id } = useParams<{ id: string }>();
   const [movie, setMovie] = useState<any>();
-  console.log(movie);
+  const [actors, setActors] = useState<any[]>([]);
+  const [trailers, setTrailers] = useState<any>([]);
+
+  const responsive = {
+    superLargeDesktop: {
+      breakpoint: { max: 4000, min: 3000 },
+      items: 8,
+    },
+    desktop: {
+      breakpoint: { max: 3000, min: 1024 },
+      items: 5,
+    },
+    tablet: {
+      breakpoint: { max: 1024, min: 464 },
+      items: 4,
+    },
+    mobile: {
+      breakpoint: { max: 464, min: 0 },
+      items: 2,
+    },
+  };
+
+  console.log(actors);
 
   useEffect(() => {
     if (id) {
       getDetailMovie(id)
         .then((result) => {
           setMovie(result.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+      getActorMovie(id)
+        .then((result) => {
+          setActors(result.data.cast);
         })
         .catch((error) => {
           console.log(error);
@@ -76,6 +107,22 @@ const Details = () => {
           </div>
         </div>
       )}
+      <div className="container max-w-[1000px] mx-auto flex ">
+        <div>
+          {actors?.length > 0
+            ? actors.map((actor: any) => (
+                <div key={actor.id} className="">
+                  <img
+                    src={`${import.meta.env.VITE_APP_BASEIMGURL}/${
+                      actor.profile_path
+                    }`}
+                    alt={actor.name}
+                  />
+                </div>
+              ))
+            : null}
+        </div>
+      </div>
       <div className="h-96"></div>
     </>
   );

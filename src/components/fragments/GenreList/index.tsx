@@ -9,7 +9,7 @@ type PropsTypes = {
 const GenreList = (props: PropsTypes) => {
   const { genres, handleGenre, selectGenres } = props;
   return (
-    <div className="flex gap-2 my-12 md:flex-wrap md:justify-center overflow-auto no-scroll">
+    <div className="container max-w-[1000px] mx-auto px-4 xl:px-0 flex gap-2 my-12 md:flex-wrap md:justify-center overflow-auto no-scroll">
       {genres.length > 0
         ? genres.map((genre: any) => (
             <ButtonGenre

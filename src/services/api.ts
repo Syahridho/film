@@ -42,3 +42,17 @@ export const getMovieByGenre = async (genreId: string) => {
   );
   return movie;
 };
+
+export const getActorMovie = async (movieId: string) => {
+  const actor = await axios.get(
+    `${baseUrl}/movie/${movieId}/credits?api_key=${apiKey}`
+  );
+  return actor;
+};
+
+export const getTrailerMovie = async (movieId: string) => {
+  const actor = await axios.get(
+    `${baseUrl}/movie/${movieId}/videos?api_key=${apiKey}`
+  );
+  return actor;
+};
