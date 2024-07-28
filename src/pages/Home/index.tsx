@@ -3,12 +3,16 @@ import {
   getMovieList,
   searchMovie,
   getMoviePopular,
+  getMovieGenre,
 } from "./../../services/api";
 import React, { Suspense, useEffect, useState } from "react";
 import { FaXmark } from "react-icons/fa6";
 import CardListSkeleton from "../../components/fragments/CardListSkeleton";
 import CarsList from "../../components/fragments/CarsList";
 import { Link } from "react-router-dom";
+import Footer from "../../components/layout/FooterLayout";
+import WaterMark from "../../components/element/WaterMark";
+import Button from "../../components/element/Button";
 
 const CardListCarousel = React.lazy(
   () => import("../../components/fragments/CardListCarousel")
@@ -18,6 +22,7 @@ const Home = () => {
   const [movies, setMovies] = useState<any>([]);
   const [searchMovies, setSearchMovies] = useState<any>([]);
   const [populars, setPopulars] = useState<any>([]);
+  const [genres, setGenres] = useState<any>([]);
 
   const [search, setSearch] = useState<any>("");
 
@@ -43,6 +48,14 @@ const Home = () => {
     getMovieList()
       .then((result) => {
         setMovies(result.data.results);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    getMovieGenre()
+      .then((result) => {
+        setGenres(result.data.genres);
       })
       .catch((error) => {
         console.log(error);
@@ -115,35 +128,26 @@ const Home = () => {
               atau kesalahan lainnya.
             </p>
           </div>
+          <div className="flex flex-wrap justify-center gap-2">
+            {genres.length > 0
+              ? genres.map((genre: any) => (
+                  <button
+                    className="border text-sm text-slate-500 py-1 px-2 rounded-full hover:bg-slate-200"
+                    type="button"
+                    key={genre.id}
+                    onClick={() => console.log("asux`")}
+                  >
+                    {genre.name}
+                  </button>
+                ))
+              : null}
+          </div>
 
           <CarsList movies={movies} title={"Movies"} />
         </div>
-
-        <div className="bg-slate-100 mt-12 px-8 py-12 xl:mb-12 xl:px-0 md:py-16 md:border-t md:border-slate-200 md:bg-[#fafafa]">
-          <div className="grid grid-cols-12 gap-12 ">
-            <div className="col-span-12 md:col-span-4 flex flex-col gap-1">
-              <h1 className="font-semibold text-3xl">Movie Sas</h1>
-              <h3>syahridhosyahputra@gmail.com</h3>
-            </div>
-            <div className="col-span-12 md:col-span-3 md:col-start-10 flex flex-col gap-2">
-              <h1 className="font-semibold">Movie Sas</h1>
-              <Link to="/login" className="underline">
-                Log In
-              </Link>
-              <Link to="/signup" className="underline">
-                Sign Up
-              </Link>
-              <Link to="forgot" className="underline">
-                Forgot Password
-              </Link>
-            </div>
-          </div>
-        </div>
+        <Footer />
       </div>
-
-      <div className="text-center py-2 bg-slate-800 text-white text-sm shadow">
-        <h1>@2024 Syahridho Arjuna Syahputra</h1>
-      </div>
+      <WaterMark />
     </>
   );
 };

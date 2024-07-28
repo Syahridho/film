@@ -28,3 +28,17 @@ export const getMovieList = async () => {
   );
   return movie;
 };
+
+export const getMovieGenre = async () => {
+  const genre = await axios.get(
+    `${baseUrl}/genre/movie/list?api_key=${apiKey}`
+  );
+  return genre;
+};
+
+export const getMovieByGenre = async (genreId: string) => {
+  const movie = await axios.get(
+    `${baseUrl}/discover/movie?api_key=${apiKey}&with_genres=${genreId}`
+  );
+  return movie;
+};
