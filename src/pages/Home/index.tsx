@@ -4,6 +4,7 @@ import {
   searchMovie,
   getMoviePopular,
   getMovieGenre,
+  getMovieByGenre,
 } from "./../../services/api";
 import React, { Suspense, useEffect, useState } from "react";
 import { FaXmark } from "react-icons/fa6";
@@ -12,7 +13,8 @@ import CarsList from "../../components/fragments/CarsList";
 import { Link } from "react-router-dom";
 import Footer from "../../components/layout/FooterLayout";
 import WaterMark from "../../components/element/WaterMark";
-import Button from "../../components/element/Button";
+import ButtonGenre from "../../components/element/ButtonGenre";
+import GenreList from "../../components/fragments/GenreList";
 
 const CardListCarousel = React.lazy(
   () => import("../../components/fragments/CardListCarousel")
@@ -22,6 +24,7 @@ const Home = () => {
   const [movies, setMovies] = useState<any>([]);
   const [searchMovies, setSearchMovies] = useState<any>([]);
   const [populars, setPopulars] = useState<any>([]);
+  const [selectGenres, setSelectGenres] = useState<any>(null);
   const [genres, setGenres] = useState<any>([]);
 
   const [search, setSearch] = useState<any>("");
@@ -34,6 +37,17 @@ const Home = () => {
     } else {
       setSearchMovies([]);
     }
+  };
+
+  const handleGenre = async (genreId: string) => {
+    setSelectGenres(genreId);
+    await getMovieByGenre(genreId)
+      .then((result) => {
+        setMovies(result.data.results);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   useEffect(() => {
@@ -128,20 +142,11 @@ const Home = () => {
               atau kesalahan lainnya.
             </p>
           </div>
-          <div className="flex flex-wrap justify-center gap-2">
-            {genres.length > 0
-              ? genres.map((genre: any) => (
-                  <button
-                    className="border text-sm text-slate-500 py-1 px-2 rounded-full hover:bg-slate-200"
-                    type="button"
-                    key={genre.id}
-                    onClick={() => console.log("asux`")}
-                  >
-                    {genre.name}
-                  </button>
-                ))
-              : null}
-          </div>
+          <GenreList
+            genres={genres}
+            selectGenres={selectGenres}
+            handleGenre={handleGenre}
+          />
 
           <CarsList movies={movies} title={"Movies"} />
         </div>
