@@ -7,7 +7,6 @@ import {
   getMovieByGenre,
 } from "./../../services/api";
 import React, { Suspense, useEffect, useState } from "react";
-import { FaXmark } from "react-icons/fa6";
 import CardListSkeleton from "../../components/fragments/CardListSkeleton";
 import CarsList from "../../components/fragments/CarsList";
 import Footer from "../../components/layout/FooterLayout";

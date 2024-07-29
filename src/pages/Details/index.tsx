@@ -3,31 +3,21 @@ import { Link, useParams } from "react-router-dom";
 import { getActorMovie, getDetailMovie } from "../../services/api";
 import roundToOneDecimal from "../../utils/oneDecimal";
 import { FaArrowLeft } from "react-icons/fa6";
-import Carousel from "react-multi-carousel";
 
 const Details = () => {
   const { id } = useParams<{ id: string }>();
   const [movie, setMovie] = useState<any>();
-  const [actors, setActors] = useState<any[]>([]);
-  const [trailers, setTrailers] = useState<any>([]);
+  const [actors, setActors] = useState<any>([]);
+  // const [trailers, setTrailers] = useState<any>([]);
 
-  const responsive = {
-    superLargeDesktop: {
-      breakpoint: { max: 4000, min: 3000 },
-      items: 8,
-    },
-    desktop: {
-      breakpoint: { max: 3000, min: 1024 },
-      items: 5,
-    },
-    tablet: {
-      breakpoint: { max: 1024, min: 464 },
-      items: 4,
-    },
-    mobile: {
-      breakpoint: { max: 464, min: 0 },
-      items: 2,
-    },
+  const [loading, setLoading] = useState<any>({});
+
+  const handleImageLoad = (id: string) => {
+    setLoading((prevState: any) => ({ ...prevState, [id]: false }));
+  };
+
+  const handleImageError = (id: string) => {
+    setLoading((prevState: any) => ({ ...prevState, [id]: false }));
   };
 
   console.log(actors);
@@ -107,23 +97,36 @@ const Details = () => {
           </div>
         </div>
       )}
-      <div className="container max-w-[1000px] mx-auto flex ">
-        <div>
-          {actors?.length > 0
+      <div className="container max-w-[1000px] mx-auto px-4 py-12">
+        <h1 className="ps-2 text-3xl font-semibold">Actor</h1>
+        <div className="grid grid-cols-3 md:grid-cols-7 mx-auto gap-1.5">
+          {actors.length > 0
             ? actors.map((actor: any) => (
-                <div key={actor.id} className="">
-                  <img
-                    src={`${import.meta.env.VITE_APP_BASEIMGURL}/${
-                      actor.profile_path
-                    }`}
-                    alt={actor.name}
-                  />
+                <div
+                  key={actor.id}
+                  className="border rounded shadow overflow-hidden"
+                >
+                  {loading[actor.id] ? (
+                    <div className="bg-gray-300 animate-pulse"></div>
+                  ) : actor.profile_path ? (
+                    <img
+                      src={`${import.meta.env.VITE_APP_BASEIMGURL}/${
+                        actor.profile_path
+                      }`}
+                      alt={actor.name}
+                      className="w-40 bg-cover"
+                      onLoad={() => handleImageLoad(actor.id)}
+                      onError={() => handleImageError(actor.id)}
+                    />
+                  ) : (
+                    <div className="bg-red-500 h-44"></div>
+                  )}
+                  <h1 className="p-2">{actor.name}</h1>
                 </div>
               ))
             : null}
         </div>
       </div>
-      <div className="h-96"></div>
     </>
   );
 };
