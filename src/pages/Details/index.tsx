@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { getActorMovie, getDetailMovie } from "../../services/api";
+import {
+  getActorMovie,
+  getDetailMovie,
+  getTrailerMovie,
+} from "../../services/api";
 import roundToOneDecimal from "../../utils/oneDecimal";
-import { FaArrowLeft, FaAngleDown } from "react-icons/fa6";
+import { FaArrowLeft } from "react-icons/fa6";
+import Carousel from "react-multi-carousel";
 
 const Details = () => {
   const { id } = useParams<{ id: string }>();
@@ -11,7 +16,8 @@ const Details = () => {
   const [statusActor, setStatusActor] = useState<any>(false);
   const [actors, setActors] = useState<any>([]);
   const [allActors, setAllActors] = useState<any>([]);
-  // const [trailers, setTrailers] = useState<any>([]);
+
+  const [trailers, setTrailers] = useState<any>([]);
 
   const [loading, setLoading] = useState<any>({});
 
@@ -22,9 +28,26 @@ const Details = () => {
   const handleImageError = (id: string) => {
     setLoading((prevState: any) => ({ ...prevState, [id]: false }));
   };
+  console.log(trailers);
 
-  console.log(actors);
-  console.log(allActors);
+  const responsive = {
+    superLargeDesktop: {
+      breakpoint: { max: 4000, min: 3000 },
+      items: 5,
+    },
+    desktop: {
+      breakpoint: { max: 3000, min: 1024 },
+      items: 4,
+    },
+    tablet: {
+      breakpoint: { max: 1024, min: 464 },
+      items: 2,
+    },
+    mobile: {
+      breakpoint: { max: 464, min: 0 },
+      items: 1,
+    },
+  };
 
   useEffect(() => {
     if (id) {
@@ -41,6 +64,14 @@ const Details = () => {
           const allActorsData = result.data.cast || [];
           setActors(allActorsData.slice(0, 7));
           setAllActors(allActorsData);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+      getTrailerMovie(id)
+        .then((result) => {
+          setTrailers(result.data.results);
         })
         .catch((error) => {
           console.log(error);
@@ -103,6 +134,23 @@ const Details = () => {
           </div>
         </div>
       )}
+      <div className="container max-w-[1000px] mx-auto px-4 py-12">
+        <h1 className="ps-2 text-3xl font-semibold mb-12">Trailer</h1>
+        <Carousel responsive={responsive}>
+          {trailers
+            ? trailers.map((trailer: any, index: any) => (
+                <iframe
+                  key={index}
+                  src={`https://www.youtube.com/embed/${trailer.key}`}
+                  className="rounded mx-2"
+                  allow="clipboard-write; encrypted-media; picture-in-picture"
+                  allowFullScreen
+                  title={trailer.name}
+                ></iframe>
+              ))
+            : null}
+        </Carousel>
+      </div>
       <div className="container max-w-[1000px] mx-auto px-4 py-12">
         <h1 className="ps-2 text-3xl font-semibold mb-12">Actor</h1>
         <div className="grid grid-cols-3 md:grid-cols-7 mx-auto gap-3 flex-nowrap">
