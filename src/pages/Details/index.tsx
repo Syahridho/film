@@ -135,7 +135,7 @@ const Details = () => {
         </div>
       )}
       <div className="container max-w-[1000px] mx-auto px-4 py-12">
-        <h1 className="ps-2 text-3xl font-semibold mb-12">Trailer</h1>
+        <h1 className="ps-2 text-3xl font-semibold mb-12">Trailers</h1>
         <Carousel responsive={responsive}>
           {trailers
             ? trailers.map((trailer: any, index: any) => (
