@@ -2,12 +2,15 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getActorMovie, getDetailMovie } from "../../services/api";
 import roundToOneDecimal from "../../utils/oneDecimal";
-import { FaArrowLeft } from "react-icons/fa6";
+import { FaArrowLeft, FaAngleDown } from "react-icons/fa6";
 
 const Details = () => {
   const { id } = useParams<{ id: string }>();
   const [movie, setMovie] = useState<any>();
+
+  const [statusActor, setStatusActor] = useState<any>(false);
   const [actors, setActors] = useState<any>([]);
+  const [allActors, setAllActors] = useState<any>([]);
   // const [trailers, setTrailers] = useState<any>([]);
 
   const [loading, setLoading] = useState<any>({});
@@ -21,6 +24,7 @@ const Details = () => {
   };
 
   console.log(actors);
+  console.log(allActors);
 
   useEffect(() => {
     if (id) {
@@ -34,7 +38,9 @@ const Details = () => {
 
       getActorMovie(id)
         .then((result) => {
-          setActors(result.data.cast);
+          const allActorsData = result.data.cast || [];
+          setActors(allActorsData.slice(0, 7));
+          setAllActors(allActorsData);
         })
         .catch((error) => {
           console.log(error);
@@ -98,13 +104,44 @@ const Details = () => {
         </div>
       )}
       <div className="container max-w-[1000px] mx-auto px-4 py-12">
-        <h1 className="ps-2 text-3xl font-semibold">Actor</h1>
-        <div className="grid grid-cols-3 md:grid-cols-7 mx-auto gap-1.5">
-          {actors.length > 0
+        <h1 className="ps-2 text-3xl font-semibold mb-12">Actor</h1>
+        <div className="grid grid-cols-3 md:grid-cols-7 mx-auto gap-3 flex-nowrap">
+          {statusActor
+            ? allActors.length > 0
+              ? allActors.map((actor: any) => (
+                  <div
+                    key={actor.id}
+                    className="border rounded shadow overflow-hidden "
+                  >
+                    {loading[actor.id] ? (
+                      <div className="bg-gray-300 animate-pulse"></div>
+                    ) : actor.profile_path ? (
+                      <img
+                        src={`${import.meta.env.VITE_APP_BASEIMGURL}/${
+                          actor.profile_path
+                        }`}
+                        alt={actor.name}
+                        className="w-40 bg-cover"
+                        onLoad={() => handleImageLoad(actor.id)}
+                        onError={() => handleImageError(actor.id)}
+                      />
+                    ) : (
+                      <div className="bg-red-500 h-44"></div>
+                    )}
+                    <div className="p-2">
+                      <h1 className="">{actor.name}</h1>
+                      <h1 className=" text-slate-500 text-xs">
+                        {actor.character}
+                      </h1>
+                    </div>
+                  </div>
+                ))
+              : null
+            : actors.length > 0
             ? actors.map((actor: any) => (
                 <div
                   key={actor.id}
-                  className="border rounded shadow overflow-hidden"
+                  className="border rounded shadow overflow-hidden "
                 >
                   {loading[actor.id] ? (
                     <div className="bg-gray-300 animate-pulse"></div>
@@ -121,10 +158,27 @@ const Details = () => {
                   ) : (
                     <div className="bg-red-500 h-44"></div>
                   )}
-                  <h1 className="p-2">{actor.name}</h1>
+                  <div className="p-2">
+                    <h1 className="">{actor.name}</h1>
+                    <h1 className=" text-slate-500 text-xs">
+                      {actor.character}
+                    </h1>
+                  </div>
                 </div>
               ))
             : null}
+        </div>
+        <div>
+          <div className="flex justify-center items-center gap-4 my-6">
+            <hr className="flex-1 border-t border-gray-400" />
+            <button
+              className="border text-sm rounded-full px-12 py-1 text-slate-500 hover:bg-slate-100 "
+              onClick={() => setStatusActor(!statusActor)}
+            >
+              {statusActor ? "Sedikitkan" : "Lihat Semua"}
+            </button>
+            <hr className="flex-1 border-t border-gray-400" />
+          </div>
         </div>
       </div>
     </>
