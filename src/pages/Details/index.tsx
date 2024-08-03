@@ -7,14 +7,12 @@ import {
 } from "../../services/api";
 import roundToOneDecimal from "../../utils/oneDecimal";
 import { FaArrowLeft } from "react-icons/fa6";
-import Carousel from "react-multi-carousel";
 
 const Details = () => {
   const { id } = useParams<{ id: string }>();
   const [movie, setMovie] = useState<any>();
 
   const [statusActor, setStatusActor] = useState<any>(false);
-  const [actors, setActors] = useState<any>([]);
   const [allActors, setAllActors] = useState<any>([]);
 
   const [trailers, setTrailers] = useState<any>([]);
@@ -27,26 +25,6 @@ const Details = () => {
 
   const handleImageError = (id: string) => {
     setLoading((prevState: any) => ({ ...prevState, [id]: false }));
-  };
-  console.log(trailers);
-
-  const responsive = {
-    superLargeDesktop: {
-      breakpoint: { max: 4000, min: 3000 },
-      items: 5,
-    },
-    desktop: {
-      breakpoint: { max: 3000, min: 1024 },
-      items: 4,
-    },
-    tablet: {
-      breakpoint: { max: 1024, min: 464 },
-      items: 2,
-    },
-    mobile: {
-      breakpoint: { max: 464, min: 0 },
-      items: 1,
-    },
   };
 
   useEffect(() => {
@@ -62,7 +40,6 @@ const Details = () => {
       getActorMovie(id)
         .then((result) => {
           const allActorsData = result.data.cast || [];
-          setActors(allActorsData.slice(0, 7));
           setAllActors(allActorsData);
         })
         .catch((error) => {
@@ -136,20 +113,20 @@ const Details = () => {
       )}
       <div className="container max-w-[1000px] mx-auto px-4 py-12">
         <h1 className="ps-2 text-3xl font-semibold mb-12">Trailers</h1>
-        <Carousel responsive={responsive}>
+        <div className="flex w-full overflow-x-auto no-scroll">
           {trailers
             ? trailers.map((trailer: any, index: any) => (
                 <iframe
                   key={index}
                   src={`https://www.youtube.com/embed/${trailer.key}`}
                   className="rounded mx-2"
-                  allow="clipboard-write; encrypted-media; picture-in-picture"
-                  allowFullScreen
                   title={trailer.name}
+                  loading="lazy"
+                  style={{ minWidth: "300px" }}
                 ></iframe>
               ))
             : null}
-        </Carousel>
+        </div>
       </div>
       <div className="container max-w-[1000px] mx-auto px-4 py-12">
         <h1 className="ps-2 text-3xl font-semibold mb-12">Actor</h1>
@@ -169,12 +146,13 @@ const Details = () => {
                           actor.profile_path
                         }`}
                         alt={actor.name}
+                        loading="lazy"
                         className="w-40 bg-cover"
                         onLoad={() => handleImageLoad(actor.id)}
                         onError={() => handleImageError(actor.id)}
                       />
                     ) : (
-                      <div className="bg-red-500 h-44"></div>
+                      <div className="bg-slate-500 h-44"></div>
                     )}
                     <div className="p-2">
                       <h1 className="">{actor.name}</h1>
@@ -185,8 +163,8 @@ const Details = () => {
                   </div>
                 ))
               : null
-            : actors.length > 0
-            ? actors.map((actor: any) => (
+            : allActors.length > 0
+            ? allActors.slice(0, 7).map((actor: any) => (
                 <div
                   key={actor.id}
                   className="border rounded shadow overflow-hidden "
