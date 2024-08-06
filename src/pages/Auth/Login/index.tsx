@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "../../../components/layout/AuthLayout";
 import Input from "../../../components/element/Input";
 import Button from "../../../components/element/Button";
@@ -8,15 +8,36 @@ import AuthOtherLayout from "../../../components/layout/AuthOtherLayout";
 import { loginGoogle } from "../../../services/firebase/services";
 import { useState } from "react";
 import { FaGoogle } from "react-icons/fa6";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../../services/firebase/init";
 
 const Login = () => {
+  const navigate = useNavigate();
+
+  const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setIsLoading(true);
     const form = event.target as HTMLFormElement;
-    console.log(form);
+
+    await signInWithEmailAndPassword(
+      auth,
+      form.email.value,
+      form.password.value
+    )
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log("Login berhasil :", JSON.stringify(user));
+        setIsLoading(false);
+        navigate("/");
+      })
+      .catch((error) => {
+        setError(error.message);
+        setIsLoading(false);
+      });
   };
 
   const handleGoogle = async () => {
@@ -24,6 +45,7 @@ const Login = () => {
       const result = await loginGoogle();
       console.log("Login google : ", result);
       setSuccess(true);
+      navigate("/");
     } catch (error) {
       console.log(error);
     }
@@ -39,7 +61,7 @@ const Login = () => {
         >
           Lupa Password
         </Link>
-        <Button type="submit">Masuk</Button>
+        <Button type="submit">{isLoading ? "Loading..." : "Masuk"}</Button>
       </Form>
       <AuthPrompt
         title="Belum punya akun? sini"
