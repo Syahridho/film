@@ -18,6 +18,7 @@ const Input = (props: PropstTypes) => {
         value={value}
         onChange={onChange}
         className="border p-1 rounded shadow-sm"
+        required
       />
     </div>
   );

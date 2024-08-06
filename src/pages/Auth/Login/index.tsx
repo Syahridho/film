@@ -5,12 +5,28 @@ import Button from "../../../components/element/Button";
 import Form from "../../../components/fragments/Form";
 import AuthPrompt from "../../../components/layout/AuthPromptLayout";
 import AuthOtherLayout from "../../../components/layout/AuthOtherLayout";
+import { loginGoogle } from "../../../services/firebase/services";
+import { useState } from "react";
+import { FaGoogle } from "react-icons/fa6";
 
 const Login = () => {
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.target as HTMLFormElement;
     console.log(form);
+  };
+
+  const handleGoogle = async () => {
+    try {
+      const result = await loginGoogle();
+      console.log("Login google : ", result);
+      setSuccess(true);
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <AuthLayout title="Masuk">
@@ -30,7 +46,10 @@ const Login = () => {
         to="/signup"
         linkTitle="Daftar"
       />
-      <AuthOtherLayout />
+      <AuthOtherLayout onClick={() => handleGoogle()}>
+        <FaGoogle />
+        Masuk dengan google
+      </AuthOtherLayout>
     </AuthLayout>
   );
 };
