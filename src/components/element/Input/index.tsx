@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
+
 type PropstTypes = {
   label: string;
   type?: "text" | "password" | "number" | "email";
@@ -7,19 +10,31 @@ type PropstTypes = {
 };
 
 const Input = (props: PropstTypes) => {
+  const [hidden, setHidden] = useState(false);
   const { label, type, name, value, onChange } = props;
   return (
     <div className="flex flex-col gap-1">
       <label htmlFor={name}>{label}</label>
-      <input
-        type={type}
-        name={name}
-        id={name}
-        value={value}
-        onChange={onChange}
-        className="border p-1 rounded shadow-sm"
-        required
-      />
+      <div className="relative">
+        <input
+          type={hidden ? "text" : type}
+          name={name}
+          id={name}
+          value={value}
+          onChange={onChange}
+          className="border p-1 w-full rounded shadow-sm"
+          required
+        />
+        {type === "password" && (
+          <button
+            type="button"
+            onClick={() => setHidden(!hidden)}
+            className="absolute right-0 text-slate-500 p-2"
+          >
+            {hidden ? <FaRegEyeSlash /> : <FaRegEye />}
+          </button>
+        )}
+      </div>
     </div>
   );
 };
