@@ -11,9 +11,11 @@ import {
 } from "../../../services/firebase/services";
 import { useState } from "react";
 import { FaGoogle } from "react-icons/fa6";
+import { useDispatch } from "react-redux";
 
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -24,7 +26,7 @@ const Login = () => {
     const form = event.target as HTMLFormElement;
 
     try {
-      await loginEmailPassword(form.email.value, form.password.value);
+      await loginEmailPassword(form.email.value, form.password.value, dispatch);
       setIsLoading(false);
       navigate("/");
     } catch (error: any) {
@@ -52,7 +54,7 @@ const Login = () => {
     setIsLoading(false);
     setError(null);
     try {
-      await loginGoogle();
+      await loginGoogle(dispatch);
       navigate("/");
     } catch (error: any) {
       setError(error.code);

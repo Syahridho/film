@@ -23,6 +23,7 @@ const Forgot = () => {
     } catch (error: any) {
       setMessage(error);
       setIsLoading(false);
+      setMessage("Email belum terdaftar");
       console.log(error);
     }
   };

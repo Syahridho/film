@@ -1,19 +1,21 @@
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "../../../components/layout/AuthLayout";
 import Input from "../../../components/element/Input";
 import Button from "../../../components/element/Button";
 import Form from "../../../components/fragments/Form";
 import AuthPrompt from "../../../components/layout/AuthPromptLayout";
 import AuthOtherLayout from "../../../components/layout/AuthOtherLayout";
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { FaGoogle } from "react-icons/fa6";
 import {
   loginGoogle,
   singUpEmailPassword,
 } from "../../../services/firebase/services";
+import { useDispatch } from "react-redux";
 
 const SignUp = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -54,7 +56,7 @@ const SignUp = () => {
     setSuccess(false);
     setError(null);
     try {
-      await loginGoogle();
+      await loginGoogle(dispatch);
       setSuccess(true);
       navigate("/");
     } catch (error: any) {

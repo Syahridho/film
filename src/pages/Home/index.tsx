@@ -15,18 +15,22 @@ import GenreList from "../../components/fragments/GenreList";
 import Navbar from "../../components/layout/Navbar";
 import Info from "../../components/element/Info";
 import SearchHero from "../../components/fragments/SearchHero";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "../../store/action";
 
 const CardListCarousel = React.lazy(
   () => import("../../components/fragments/CardListCarousel")
 );
 
 const Home = () => {
+  const user = useSelector((state: any) => state.user);
+  const dispatch = useDispatch();
+
   const [movies, setMovies] = useState<any>([]);
   const [searchMovies, setSearchMovies] = useState<any>([]);
   const [populars, setPopulars] = useState<any>([]);
   const [selectGenres, setSelectGenres] = useState<any>(null);
   const [genres, setGenres] = useState<any>([]);
-
   const [search, setSearch] = useState<any>("");
 
   const handleSearch = async () => {
@@ -77,12 +81,26 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    handleSearch();
+    setTimeout(() => {
+      handleSearch();
+    }, 500);
   }, [search]);
+
+  useEffect(() => {
+    try {
+      const userData = localStorage.getItem("user");
+      if (userData) {
+        const parseUserData = JSON.parse(userData);
+        dispatch(setUser(parseUserData));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [dispatch]);
 
   return (
     <>
-      <Navbar />
+      <Navbar user={user} />
       <SearchHero
         search={search}
         setSearch={setSearch}
