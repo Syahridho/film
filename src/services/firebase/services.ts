@@ -5,8 +5,16 @@ import {
   signInWithPopup,
   signOut,
 } from "firebase/auth";
-import { auth, googleProvider } from "./init";
+import { auth, googleProvider, db } from "./init";
 import { setUser } from "../../store/action";
+import {
+  addDoc,
+  arrayUnion,
+  collection,
+  doc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 
 export const singUpEmailPassword = async (email: string, password: string) => {
   await createUserWithEmailAndPassword(auth, email, password)
@@ -84,4 +92,16 @@ export const signOutUser = async (dispatch: any) => {
     .catch((error) => {
       console.log(error);
     });
+};
+
+export const addFavorite = async (idFilm: string, idUser: string) => {
+  try {
+    const data: any = { favorite: arrayUnion(idFilm) };
+    const docRef = doc(db, "film", idUser);
+    await updateDoc(docRef, data, { merge: true });
+
+    console.log("success");
+  } catch (error) {
+    console.log(error);
+  }
 };

@@ -5,11 +5,15 @@ import {
   getDetailMovie,
   getTrailerMovie,
 } from "../../services/api";
+import { addFavorite } from "../../services/firebase/services";
 import roundToOneDecimal from "../../utils/oneDecimal";
+import { FaHeart } from "react-icons/fa";
 import { FaArrowLeft } from "react-icons/fa6";
+import { useSelector } from "react-redux";
 
 const Details = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id: any }>();
+  const user = useSelector((state: any) => state.user);
   const [movie, setMovie] = useState<any>();
 
   const [statusActor, setStatusActor] = useState<any>(false);
@@ -28,6 +32,7 @@ const Details = () => {
   };
 
   useEffect(() => {
+    console.log(user);
     if (id) {
       getDetailMovie(id)
         .then((result) => {
@@ -88,9 +93,15 @@ const Details = () => {
               <h1 className="text-2xl font-bold text-slate-800 mb-2 mt-24 xl:mt-0">
                 {movie.title}
               </h1>
-              <h2 className="text-base text-slate-600 text-justify mb-4">
+              <h2 className="text-base text-slate-600 text-justify">
                 {movie.overview}
               </h2>
+              <button
+                className="p-2 border-2 rounded-full mb-4 mt-2 text-slate-300"
+                onClick={() => addFavorite(id, user.uid)}
+              >
+                <FaHeart />
+              </button>
               <p className="mb-4">
                 Rating{" "}
                 <span className="text-yellow-500 font-medium">
