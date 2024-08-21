@@ -1,7 +1,12 @@
 import { createStore } from "redux";
 
+const user: any = localStorage.getItem("user");
+
+const data = JSON.parse(user);
+
 const initialState = {
-  user: null,
+  user: data,
+  favorite: null,
 };
 
 const reducer = (state = initialState, action: any) => {
@@ -10,6 +15,8 @@ const reducer = (state = initialState, action: any) => {
       return { ...state, user: action.payload };
     case "CLEAR_USER":
       return { ...state, user: null };
+    case "SET_FAVORITE":
+      return { ...state, favorite: action.payload };
     default:
       return state;
   }

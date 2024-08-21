@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 
 const Card = (props: any) => {
   const { movie } = props;
-
   return (
     <Link
       to={`/detail/${movie.id}`}

@@ -5,6 +5,7 @@ import {
   getMoviePopular,
   getMovieGenre,
   getMovieByGenre,
+  getFilmById,
 } from "./../../services/api";
 import React, { Suspense, useEffect, useState } from "react";
 import CardListSkeleton from "../../components/fragments/CardListSkeleton";
@@ -16,7 +17,8 @@ import Navbar from "../../components/layout/Navbar";
 import Info from "../../components/element/Info";
 import SearchHero from "../../components/fragments/SearchHero";
 import { useDispatch, useSelector } from "react-redux";
-import { setUser } from "../../store/action";
+import { setFavorite, setUser } from "../../store/action";
+import { getUserFavorites } from "../../services/firebase/services";
 
 const CardListCarousel = React.lazy(
   () => import("../../components/fragments/CardListCarousel")
@@ -54,6 +56,20 @@ const Home = () => {
       });
   };
 
+  const getFavorite = async () => {
+    const data: any = await getUserFavorites(user.uid, dispatch);
+    const favorite = data || [];
+
+    const moviesData = await Promise.all(
+      favorite.map(async (id: string) => {
+        const movie = await getFilmById(id);
+        return movie.data;
+      })
+    );
+    console.log(moviesData);
+    dispatch(setFavorite(moviesData));
+  };
+
   useEffect(() => {
     getMoviePopular()
       .then((result) => {
@@ -78,6 +94,7 @@ const Home = () => {
       .catch((error) => {
         console.log(error);
       });
+    getFavorite();
   }, []);
 
   useEffect(() => {

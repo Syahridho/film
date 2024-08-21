@@ -1,25 +1,34 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   getActorMovie,
   getDetailMovie,
-  getTrailerMovie,
+  // getTrailerMovie,
 } from "../../services/api";
-import { addFavorite } from "../../services/firebase/services";
+import {
+  addFavorite,
+  getUserFavorites,
+  removeFavorite,
+} from "../../services/firebase/services";
 import roundToOneDecimal from "../../utils/oneDecimal";
 import { FaHeart } from "react-icons/fa";
 import { FaArrowLeft } from "react-icons/fa6";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const Details = () => {
   const { id } = useParams<{ id: any }>();
+  const favorite = useSelector((state: any) => state.favorite);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const user = useSelector((state: any) => state.user);
   const [movie, setMovie] = useState<any>();
+  const [love, setLove] = useState<boolean>(false);
 
   const [statusActor, setStatusActor] = useState<any>(false);
   const [allActors, setAllActors] = useState<any>([]);
 
-  const [trailers, setTrailers] = useState<any>([]);
+  const [trailers] = useState<any>([]);
 
   const [loading, setLoading] = useState<any>({});
 
@@ -31,8 +40,24 @@ const Details = () => {
     setLoading((prevState: any) => ({ ...prevState, [id]: false }));
   };
 
+  const handleLove = async (id: any, userId: any, love: boolean) => {
+    if (love) {
+      addFavorite(id, userId);
+      await getUserFavorites(id, dispatch);
+      setLove(true);
+    } else {
+      removeFavorite(id, userId);
+      setLove(false);
+    }
+  };
+
   useEffect(() => {
-    console.log(user);
+    console.log(favorite);
+    const love = favorite.find((item: any) => item.id == id);
+    if (love) {
+      setLove(true);
+    }
+
     if (id) {
       getDetailMovie(id)
         .then((result) => {
@@ -51,13 +76,13 @@ const Details = () => {
           console.log(error);
         });
 
-      getTrailerMovie(id)
-        .then((result) => {
-          setTrailers(result.data.results);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      // getTrailerMovie(id)
+      //   .then((result) => {
+      //     setTrailers(result.data.results);
+      //   })
+      //   .catch((error) => {
+      //     console.log(error);
+      //   });
     }
   }, [id]);
 
@@ -65,12 +90,12 @@ const Details = () => {
     <>
       {movie && (
         <div className="relative bg-[#fafafa]">
-          <Link
-            to={"/"}
+          <button
+            onClick={() => navigate(-1)}
             className="absolute z-50 p-3 top-4 left-4 bg-white rounded-full border-2 border-slate-500"
           >
             <FaArrowLeft />
-          </Link>
+          </button>
           <div className="relative">
             <img
               src={`${import.meta.env.VITE_APP_BASEIMGURL}/${
@@ -97,8 +122,10 @@ const Details = () => {
                 {movie.overview}
               </h2>
               <button
-                className="p-2 border-2 rounded-full mb-4 mt-2 text-slate-300"
-                onClick={() => addFavorite(id, user.uid)}
+                className={`p-2 border-2 rounded-full mb-4 mt-2  ${
+                  love ? "text-red-500 " : "text-slate-300"
+                }`}
+                onClick={() => handleLove(id, user.id, love)}
               >
                 <FaHeart />
               </button>

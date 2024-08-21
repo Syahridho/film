@@ -10,6 +10,7 @@ import SignUp from "./pages/Auth/SignUp";
 import Forgot from "./pages/Auth/Forgot";
 import { Provider } from "react-redux";
 import store from "./store/store";
+import Favorites from "./pages/Favorites";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
   {
     path: "forgot",
     element: <Forgot />,
+  },
+  {
+    path: "favorites",
+    element: <Favorites />,
   },
 ]);
 

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { signOutUser } from "../../../services/firebase/services";
 import { useDispatch } from "react-redux";
 
@@ -7,6 +7,7 @@ const Navbar = ({ user }: any) => {
   const [menu, setMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleClickOutSide = (event: MouseEvent) => {
@@ -49,7 +50,10 @@ const Navbar = ({ user }: any) => {
           </button>
           {menu && (
             <div className="absolute border -left-2 top-14 rounded-md shadow text-slate-800 md:-left-8">
-              <button className="border w-full px-6 text-sm py-1 hover:bg-slate-100">
+              <button
+                className="border w-full px-6 text-sm py-1 hover:bg-slate-100"
+                onClick={() => navigate("/favorites")}
+              >
                 Favorite
               </button>
               <button

@@ -56,3 +56,10 @@ export const getTrailerMovie = async (movieId: string) => {
   );
   return actor;
 };
+
+export const getFilmById = async (movieId: string) => {
+  const movie = await axios.get(
+    `${baseUrl}/movie/${movieId}?api_key=${apiKey}`
+  );
+  return movie;
+};
