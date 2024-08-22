@@ -94,12 +94,28 @@ export const signOutUser = async (dispatch: any) => {
     });
 };
 
+export const getUserFavorites = async (idUser: string, dispatch: any) => {
+  try {
+    const docRef = doc(db, "film", idUser);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      dispatch(setFavorite(data.favorite));
+      return data.favorite;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const addFavorite = async (idFilm: string, idUser: string) => {
   try {
     const data: any = { favorite: arrayUnion(idFilm) };
     const docRef = doc(db, "film", idUser);
     await setDoc(docRef, data, { merge: true });
-    console.log("success");
   } catch (error) {
     console.log(error);
   }
@@ -111,26 +127,6 @@ export const removeFavorite = async (idFilm: string, idUser: string) => {
     await updateDoc(docRef, {
       favorite: arrayRemove(idFilm),
     });
-    console.log("success");
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-export const getUserFavorites = async (idUser: string, dispatch: any) => {
-  try {
-    const docRef = doc(db, "film", idUser);
-    const docSnap = await getDoc(docRef);
-
-    if (docSnap.exists()) {
-      const data = docSnap.data();
-      console.log("user data: ", data.favorite);
-      dispatch(setFavorite(data.favorite));
-      return data.favorite;
-    } else {
-      console.log("No such docuemnt!");
-      return null;
-    }
   } catch (error) {
     console.log(error);
   }

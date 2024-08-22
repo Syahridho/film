@@ -66,7 +66,6 @@ const Home = () => {
         return movie.data;
       })
     );
-    console.log(moviesData);
     dispatch(setFavorite(moviesData));
   };
 

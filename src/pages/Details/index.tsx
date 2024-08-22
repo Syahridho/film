@@ -41,21 +41,19 @@ const Details = () => {
   };
 
   const handleLove = async (id: any, userId: any, love: boolean) => {
-    console.log("love", love);
     if (!love) {
-      console.log(id, userId);
       addFavorite(id, userId);
       await getUserFavorites(id, dispatch);
       setLove(true);
     } else {
-      removeFavorite(id, userId);
+      await removeFavorite(id, userId);
+      await getUserFavorites(userId, dispatch);
       setLove(false);
     }
   };
 
   useEffect(() => {
     const love = favorite.find((item: any) => item.id == id);
-    console.log(love);
     if (love) {
       setLove(true);
     }
