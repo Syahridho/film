@@ -41,7 +41,9 @@ const Details = () => {
   };
 
   const handleLove = async (id: any, userId: any, love: boolean) => {
-    if (love) {
+    console.log("love", love);
+    if (!love) {
+      console.log(id, userId);
       addFavorite(id, userId);
       await getUserFavorites(id, dispatch);
       setLove(true);
@@ -52,8 +54,8 @@ const Details = () => {
   };
 
   useEffect(() => {
-    console.log(favorite);
     const love = favorite.find((item: any) => item.id == id);
+    console.log(love);
     if (love) {
       setLove(true);
     }
@@ -125,7 +127,7 @@ const Details = () => {
                 className={`p-2 border-2 rounded-full mb-4 mt-2  ${
                   love ? "text-red-500 " : "text-slate-300"
                 }`}
-                onClick={() => handleLove(id, user.id, love)}
+                onClick={() => handleLove(id, user.uid, love)}
               >
                 <FaHeart />
               </button>
