@@ -41,7 +41,6 @@ const Details = () => {
     setLove(!love);
   };
 
-  console.log(trailers);
   useEffect(() => {
     if (!id) return;
 

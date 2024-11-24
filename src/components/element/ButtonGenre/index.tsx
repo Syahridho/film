@@ -1,7 +1,7 @@
 type PropsTypes = {
   className?: string;
   type?: "button" | "reset" | "submit";
-  children: any;
+  children: React.ReactNode;
   onClick?: () => void;
 };
 

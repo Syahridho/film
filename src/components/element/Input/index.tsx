@@ -6,7 +6,7 @@ type PropstTypes = {
   type?: "text" | "password" | "number" | "email";
   name: string;
   value?: string | number;
-  onChange?: (event: any) => void;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 const Input = (props: PropstTypes) => {
