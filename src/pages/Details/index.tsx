@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import HeroVideoDialog from "../../components/ui/hero-video-dialog";
 
 const Details = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id: any }>();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const favorite = useSelector((state: any) => state.favorite);
