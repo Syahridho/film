@@ -19,21 +19,22 @@ import SearchHero from "../../components/fragments/SearchHero";
 import { useDispatch, useSelector } from "react-redux";
 import { setFavorite, setUser } from "../../store/action";
 import { getUserFavorites } from "../../services/firebase/services";
+import { AppState, Genre, MovieTypes } from "@/types/global";
 
 const CardListCarousel = React.lazy(
   () => import("../../components/fragments/CardListCarousel")
 );
 
 const Home = () => {
-  const user = useSelector((state: any) => state.user);
+  const user = useSelector((state: AppState) => state.user);
   const dispatch = useDispatch();
 
-  const [movies, setMovies] = useState<any>([]);
-  const [searchMovies, setSearchMovies] = useState<any>([]);
-  const [populars, setPopulars] = useState<any>([]);
+  const [movies, setMovies] = useState<MovieTypes[]>([]);
+  const [searchMovies, setSearchMovies] = useState<MovieTypes[]>([]);
+  const [populars, setPopulars] = useState<MovieTypes[]>([]);
   const [selectGenres, setSelectGenres] = useState<number | string>();
-  const [genres, setGenres] = useState<any>([]);
-  const [search, setSearch] = useState<any>("");
+  const [genres, setGenres] = useState<Genre[]>([]);
+  const [search, setSearch] = useState<string>("");
 
   const handleSearch = async () => {
     if (search.length > 3) {
@@ -45,9 +46,9 @@ const Home = () => {
     }
   };
 
-  const handleGenre = async (genreId: string) => {
+  const handleGenre = async (genreId: string | number) => {
     setSelectGenres(genreId);
-    await getMovieByGenre(genreId)
+    await getMovieByGenre(String(genreId))
       .then((result) => {
         setMovies(result.data.results);
       })
@@ -57,7 +58,7 @@ const Home = () => {
   };
 
   const getFavorite = async () => {
-    const data: any = await getUserFavorites(user.uid, dispatch);
+    const data: string[] = await getUserFavorites(String(user.uid), dispatch);
     const favorite = data || [];
 
     const moviesData = await Promise.all(
@@ -94,12 +95,13 @@ const Home = () => {
         console.log(error);
       });
     getFavorite();
-  }, []);
+  });
 
   useEffect(() => {
     setTimeout(() => {
       handleSearch();
     }, 500);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
 
   useEffect(() => {

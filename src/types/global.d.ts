@@ -22,9 +22,16 @@ interface userTypes {
   displayName: string;
 }
 
-interface AppState {
-  user: userTypes | null;
-  favorite: favoriteType | null;
+export interface AppState {
+  favorite: Movie[];
+  user: {
+    uid: string | null;
+  };
+}
+
+export interface Genre {
+  id: number;
+  name: string;
 }
 
 interface Action {

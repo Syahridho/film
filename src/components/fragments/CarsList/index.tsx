@@ -2,8 +2,8 @@ import { MovieTypes } from "@/types/global";
 import Card from "../Card";
 
 interface PropTypes {
-  movies: [];
-  title: string;
+  movies: MovieTypes[];
+  title?: string;
 }
 
 const CarsList = (props: PropTypes) => {

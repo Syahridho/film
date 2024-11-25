@@ -9,7 +9,7 @@ import AuthOtherLayout from "../../../components/layout/AuthOtherLayout";
 import { FaGoogle } from "react-icons/fa6";
 import {
   loginGoogle,
-  singUpEmailPassword,
+  signUpEmailPassword,
 } from "../../../services/firebase/services";
 import { useDispatch } from "react-redux";
 import { CodedError } from "@/types/global";
@@ -31,7 +31,7 @@ const SignUp = () => {
     const form = event.target as HTMLFormElement;
 
     try {
-      await singUpEmailPassword(form.email.value, form.password.value);
+      await signUpEmailPassword(form.email.value, form.password.value);
       setSuccess(true);
       setIsLoading(false);
       form.reset();

@@ -15,30 +15,52 @@ import { FaHeart } from "react-icons/fa";
 import { FaArrowLeft } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import HeroVideoDialog from "../../components/ui/hero-video-dialog";
-import { MovieTypes } from "@/types/global";
+import { AppState, Genre } from "@/types/global";
+
+interface Movie {
+  id: number;
+  title: string;
+  overview: string;
+  backdrop_path: string;
+  poster_path: string;
+  vote_average: number;
+  genres: Genre[];
+}
+
+interface Actor {
+  id: number;
+  name: string;
+  character: string;
+  profile_path: string | null;
+}
+
+interface Trailer {
+  id: string;
+  key: string;
+  name: string;
+}
 
 const Details = () => {
   const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const favorite = useSelector((state: any) => state.favorite);
-  const user = useSelector((state: any) => state.user);
 
-  const [movie, setMovie] = useState<any>([]);
-  const [love, setLove] = useState(false);
-  const [actors, setActors] = useState<any[]>([]);
-  const [trailers, setTrailers] = useState<any[]>([]);
-  const [loadingActors, setLoadingActors] = useState(false);
-  const [showAllActors, setShowAllActors] = useState(false);
+  const favorite = useSelector((state: AppState) => state.favorite);
+  const user = useSelector((state: AppState) => state.user);
 
-  console.log(movie);
+  const [movie, setMovie] = useState<Movie | null>(null);
+  const [love, setLove] = useState<boolean>(false);
+  const [actors, setActors] = useState<Actor[]>([]);
+  const [trailers, setTrailers] = useState<Trailer[]>([]);
+  const [loadingActors, setLoadingActors] = useState<boolean>(false);
+  const [showAllActors, setShowAllActors] = useState<boolean>(false);
 
   const toggleFavorite = async () => {
     if (!user?.uid) return;
     if (love) {
-      await removeFavorite(id, user.uid);
+      await removeFavorite(id!, user.uid);
     } else {
-      await addFavorite(id, user.uid);
+      await addFavorite(id!, user.uid);
     }
     await getUserFavorites(user.uid, dispatch);
     setLove(!love);
@@ -71,7 +93,7 @@ const Details = () => {
 
     // Check if movie is in favorites
     if (favorite) {
-      setLove(favorite.some((item: any) => item.id === id));
+      setLove(favorite.some((item) => item.id === Number(id)));
     }
   }, [id, favorite]);
 
@@ -150,16 +172,18 @@ const Details = () => {
       <div className="container max-w-[1000px] mx-auto px-4 py-12">
         <h1 className="ps-2 text-3xl font-semibold mb-12">Trailers</h1>
         <div className="flex gap-4 overflow-x-auto no-scroll">
-          {trailers.map((trailer: any) => (
-            <HeroVideoDialog
-              key={trailer.id}
-              className="w-[300px] h-full flex-shrink-0"
-              animationStyle="from-center"
-              videoSrc={`https://www.youtube.com/embed/${trailer.key}`}
-              thumbnailSrc={`https://img.youtube.com/vi/${trailer.key}/hqdefault.jpg`}
-              thumbnailAlt={trailer.name}
-            />
-          ))}
+          {trailers.map(
+            (trailer: { id: string; key: string; name: string }) => (
+              <HeroVideoDialog
+                key={trailer.id}
+                className="w-[300px] h-full flex-shrink-0"
+                animationStyle="from-center"
+                videoSrc={`https://www.youtube.com/embed/${trailer.key}`}
+                thumbnailSrc={`https://img.youtube.com/vi/${trailer.key}/hqdefault.jpg`}
+                thumbnailAlt={trailer.name}
+              />
+            )
+          )}
         </div>
       </div>
 

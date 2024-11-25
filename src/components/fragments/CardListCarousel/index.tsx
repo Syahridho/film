@@ -3,7 +3,7 @@ import Card from "../Card";
 import { MovieTypes } from "@/types/global";
 
 type PropsTypes = {
-  datas: [];
+  datas: MovieTypes[];
   title?: string;
 };
 

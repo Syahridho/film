@@ -1,9 +1,10 @@
+import { Genre } from "@/types/global";
 import ButtonGenre from "../../element/ButtonGenre";
 
 type PropsTypes = {
-  genres: [];
-  handleGenre?: (id: number) => void;
-  selectGenres: string | number;
+  genres: Genre[];
+  handleGenre?: (id: number | number) => void;
+  selectGenres: string | number | undefined;
 };
 
 const GenreList = (props: PropsTypes) => {

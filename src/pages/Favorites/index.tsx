@@ -6,21 +6,23 @@ import { useNavigate } from "react-router-dom";
 import { getUserFavorites } from "../../services/firebase/services";
 import { getFilmById } from "../../services/api";
 import { setFavorite } from "../../store/action";
+import { AppState, MovieTypes } from "@/types/global";
 
 const Favorites = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const user = useSelector((state: any) => state.user);
-  const [favorites, setFavorites] = useState<any[]>([]);
+  const user = useSelector((state: AppState) => state.user);
+  const [favorites, setFavorites] = useState<MovieTypes[]>([]);
 
   const getFavorite = async () => {
-    const data: any = await getUserFavorites(user.uid, dispatch);
-    const favorite = data || [];
+    if (!user?.uid) return;
+
+    const favoriteIds: string[] = await getUserFavorites(user.uid, dispatch);
 
     const moviesData = await Promise.all(
-      favorite.map(async (id: string) => {
+      favoriteIds.map(async (id) => {
         const movie = await getFilmById(id);
-        return movie.data;
+        return movie.data as MovieTypes;
       })
     );
     setFavorites(moviesData);
@@ -29,7 +31,7 @@ const Favorites = () => {
 
   useEffect(() => {
     getFavorite();
-  }, []);
+  });
 
   return (
     <>
@@ -47,7 +49,7 @@ const Favorites = () => {
       <div className="container p-4 mx-auto max-w-[1000px]">
         <div className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6">
           {favorites.length > 0 ? (
-            favorites.map((favorite: any, index: any) => (
+            favorites.map((favorite: MovieTypes, index: number) => (
               <Card key={index} movie={favorite} />
             ))
           ) : (
