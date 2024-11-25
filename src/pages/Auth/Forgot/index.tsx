@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 import Button from "../../../components/element/Button";
 import Input from "../../../components/element/Input";
 import Form from "../../../components/fragments/Form";
@@ -20,10 +20,13 @@ const Forgot = () => {
       await forgotPassword(form.email.value);
       setIsLoading(false);
       setMessage("Silahkan cek email anda");
-    } catch (error: any) {
-      setMessage(error);
+    } catch (error: unknown) {
       setIsLoading(false);
-      setMessage("Email belum terdaftar");
+      if (error instanceof Error) {
+        setMessage(error.message);
+      } else {
+        setMessage("Terjadi kesalahan yang tidak diketahui");
+      }
       console.log(error);
     }
   };

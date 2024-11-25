@@ -12,6 +12,7 @@ import {
   singUpEmailPassword,
 } from "../../../services/firebase/services";
 import { useDispatch } from "react-redux";
+import { CodedError } from "@/types/global";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ const SignUp = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState<String | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -34,17 +35,22 @@ const SignUp = () => {
       setSuccess(true);
       setIsLoading(false);
       form.reset();
-    } catch (error: any) {
-      switch (error.code) {
-        case "auth/email-already-in-use":
-          setError("Email sudah digunakan");
-          break;
-        case "auth/weak-password":
-          setError("Password minimal 6 karakter");
-          break;
-        default:
-          setError("Error");
-          break;
+    } catch (error: unknown) {
+      if (error instanceof Error && "code" in error) {
+        const codedError = error as CodedError;
+        switch (codedError.code) {
+          case "auth/email-already-in-use":
+            setError("Email sudah digunakan");
+            break;
+          case "auth/weak-password":
+            setError("Password minimal 6 karakter");
+            break;
+          default:
+            setError(codedError.code);
+            break;
+        }
+      } else {
+        setError("Terjadi kesalahan yang tidak diketahui");
       }
     } finally {
       setIsLoading(false);
@@ -59,8 +65,13 @@ const SignUp = () => {
       await loginGoogle(dispatch);
       setSuccess(true);
       navigate("/");
-    } catch (error: any) {
-      setError(error);
+    } catch (error: unknown) {
+      if (error instanceof Error && "code" in error) {
+        const codedError = error as CodedError;
+        setError(codedError.code);
+      } else {
+        setError("Terjadi kesalahan yang tidak diketahui");
+      }
     }
   };
 

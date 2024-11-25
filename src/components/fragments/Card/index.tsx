@@ -6,9 +6,12 @@ interface MovieTypes {
   title: string;
 }
 
-const Card = (props: MovieTypes) => {
-  const { id, title, poster_path } = props;
+type CardProps = {
+  movie: MovieTypes;
+};
 
+const Card = ({ movie }: CardProps) => {
+  const { id, title, poster_path } = movie;
   return (
     <Link
       to={`/detail/${id}`}

@@ -1,9 +1,9 @@
 import ButtonGenre from "../../element/ButtonGenre";
 
 type PropsTypes = {
-  genres: any;
-  handleGenre?: (id: string) => void;
-  selectGenres: string;
+  genres: [];
+  handleGenre?: (id: number) => void;
+  selectGenres: string | number;
 };
 
 const GenreList = (props: PropsTypes) => {
@@ -11,7 +11,7 @@ const GenreList = (props: PropsTypes) => {
   return (
     <div className="container max-w-[1000px] mx-auto px-4 xl:px-0 flex gap-2 my-12 md:flex-wrap md:justify-center overflow-auto no-scroll">
       {genres.length > 0
-        ? genres.map((genre: any) => (
+        ? genres.map((genre: { id: number; name: string }) => (
             <ButtonGenre
               key={genre.id}
               className={

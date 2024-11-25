@@ -1,4 +1,8 @@
-const CardListSkeleton = (props: any) => {
+interface PropTypes {
+  title: string;
+}
+
+const CardListSkeleton = (props: PropTypes) => {
   const { title } = props;
   return (
     <div className="container max-w-[1000px] mx-auto px-4 xl:px-0 my-0">

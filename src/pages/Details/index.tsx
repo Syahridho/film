@@ -15,20 +15,23 @@ import { FaHeart } from "react-icons/fa";
 import { FaArrowLeft } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import HeroVideoDialog from "../../components/ui/hero-video-dialog";
+import { MovieTypes } from "@/types/global";
 
 const Details = () => {
-  const { id } = useParams<{ id: any }>();
+  const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const favorite = useSelector((state: any) => state.favorite);
   const user = useSelector((state: any) => state.user);
 
-  const [movie, setMovie] = useState<any>(null);
+  const [movie, setMovie] = useState<any>([]);
   const [love, setLove] = useState(false);
   const [actors, setActors] = useState<any[]>([]);
   const [trailers, setTrailers] = useState<any[]>([]);
   const [loadingActors, setLoadingActors] = useState(false);
   const [showAllActors, setShowAllActors] = useState(false);
+
+  console.log(movie);
 
   const toggleFavorite = async () => {
     if (!user?.uid) return;
@@ -123,18 +126,22 @@ const Details = () => {
               <p className="mb-4">
                 Rating{" "}
                 <span className="text-yellow-500 font-medium">
-                  {roundToOneDecimal(movie.vote_average)}
+                  {movie.vote_average > 1
+                    ? roundToOneDecimal(movie?.vote_average)
+                    : null}
                 </span>
               </p>
               <div className="flex gap-2 flex-wrap">
-                {movie.genres.map((genre: any) => (
-                  <span
-                    key={genre.id}
-                    className="border text-sx text-slate-500 px-2 py-1 rounded-full"
-                  >
-                    {genre.name}
-                  </span>
-                ))}
+                {movie.genres
+                  ? movie?.genres.map((genre: { id: number; name: string }) => (
+                      <span
+                        key={genre.id}
+                        className="border text-sx text-slate-500 px-2 py-1 rounded-full"
+                      >
+                        {genre.name}
+                      </span>
+                    ))
+                  : null}
               </div>
             </div>
           </div>

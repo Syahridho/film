@@ -1,8 +1,9 @@
 import Carousel from "react-multi-carousel";
 import Card from "../Card";
+import { MovieTypes } from "@/types/global";
 
 type PropsTypes = {
-  datas: any;
+  datas: [];
   title?: string;
 };
 
@@ -33,7 +34,7 @@ const CardListCarousel = (props: PropsTypes) => {
       <h1 className="ps-2 text-3xl font-semibold">{title}</h1>
       <Carousel responsive={responsive} className="mb-12">
         {datas?.length > 0 &&
-          datas.map((data: any, index: any) => (
+          datas.map((data: MovieTypes, index: number) => (
             <Card movie={data} key={index} />
           ))}
       </Carousel>

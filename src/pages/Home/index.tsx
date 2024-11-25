@@ -31,7 +31,7 @@ const Home = () => {
   const [movies, setMovies] = useState<any>([]);
   const [searchMovies, setSearchMovies] = useState<any>([]);
   const [populars, setPopulars] = useState<any>([]);
-  const [selectGenres, setSelectGenres] = useState<any>(null);
+  const [selectGenres, setSelectGenres] = useState<number | string>();
   const [genres, setGenres] = useState<any>([]);
   const [search, setSearch] = useState<any>("");
 

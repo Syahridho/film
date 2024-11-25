@@ -1,6 +1,13 @@
+import { MovieTypes } from "@/types/global";
 import { FaXmark } from "react-icons/fa6";
 
-const SearchHero = (props: any) => {
+interface PropTypes {
+  search: string;
+  setSearch: (value: string) => void;
+  setSearchMovies: (movies: MovieTypes[]) => void;
+}
+
+const SearchHero = (props: PropTypes) => {
   const { search, setSearch, setSearchMovies } = props;
   return (
     <div className="container max-w-[1000px] mx-auto px-4 xl:px-0">

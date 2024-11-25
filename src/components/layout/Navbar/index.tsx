@@ -3,7 +3,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { signOutUser } from "../../../services/firebase/services";
 import { useDispatch } from "react-redux";
 
-const Navbar = ({ user }: any) => {
+type PropTypes = {
+  user: userTypes | null;
+};
+
+const Navbar = ({ user }: PropTypes) => {
   const [menu, setMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch();
