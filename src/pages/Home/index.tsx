@@ -14,7 +14,6 @@ import Footer from "../../components/layout/FooterLayout";
 import WaterMark from "../../components/element/WaterMark";
 import GenreList from "../../components/fragments/GenreList";
 import Navbar from "../../components/layout/Navbar";
-import Info from "../../components/element/Info";
 import SearchHero from "../../components/fragments/SearchHero";
 import { useDispatch, useSelector } from "react-redux";
 import { setFavorite, setUser } from "../../store/action";
@@ -128,11 +127,7 @@ const Home = () => {
       <Suspense fallback={<CardListSkeleton title={"Populer"} />}>
         <CardListCarousel datas={populars} title={"Populer"} />
       </Suspense>
-      <Info
-        title="Perhatian"
-        subTitle="Website ini sedang tahap pengerjaan jadi mohon maaf kalo ada bug atau
-        kesalahan lainnya."
-      />
+
       <GenreList
         genres={genres}
         selectGenres={selectGenres}
