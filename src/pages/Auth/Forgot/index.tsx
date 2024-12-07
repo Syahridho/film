@@ -1,4 +1,4 @@
-import { SetStateAction, useState } from "react";
+import { useState } from "react";
 import Button from "../../../components/element/Button";
 import Input from "../../../components/element/Input";
 import Form from "../../../components/fragments/Form";
