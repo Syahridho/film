@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { signOutUser } from "../../../services/firebase/services";
 import { useDispatch } from "react-redux";
+import { userTypes } from "@/types/global";
 
 type PropTypes = {
   user: userTypes | null;
