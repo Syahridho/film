@@ -24,9 +24,7 @@ interface userTypes {
 
 export interface AppState {
   favorite: Movie[];
-  user: {
-    uid: string | null;
-  };
+  user: userTypes | null
 }
 
 export interface Genre {

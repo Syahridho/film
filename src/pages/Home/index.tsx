@@ -18,14 +18,15 @@ import SearchHero from "../../components/fragments/SearchHero";
 import { useDispatch, useSelector } from "react-redux";
 import { setFavorite, setUser } from "../../store/action";
 import { getUserFavorites } from "../../services/firebase/services";
-import { AppState, Genre, MovieTypes } from "@/types/global";
+import { Genre, MovieTypes } from "@/types/global";
 
 const CardListCarousel = React.lazy(
   () => import("../../components/fragments/CardListCarousel")
 );
 
 const Home = () => {
-  const user = useSelector((state: AppState) => state.user);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const user = useSelector((state: any) => state.user);
   const dispatch = useDispatch();
 
   const [movies, setMovies] = useState<MovieTypes[]>([]);
@@ -57,16 +58,20 @@ const Home = () => {
   };
 
   const getFavorite = async () => {
-    const data: string[] = await getUserFavorites(String(user.uid), dispatch);
-    const favorite = data || [];
+    try {
+      const data: string[] = await getUserFavorites(String(user.uid), dispatch);
+      const favorite = data || [];
 
-    const moviesData = await Promise.all(
-      favorite.map(async (id: string) => {
-        const movie = await getFilmById(id);
-        return movie.data;
-      })
-    );
-    dispatch(setFavorite(moviesData));
+      const moviesData = await Promise.all(
+        favorite.map(async (id: string) => {
+          const movie = await getFilmById(id);
+          return movie.data;
+        })
+      );
+      dispatch(setFavorite(moviesData));
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -94,7 +99,7 @@ const Home = () => {
         console.log(error);
       });
     getFavorite();
-  });
+  }, []);
 
   useEffect(() => {
     setTimeout(() => {
