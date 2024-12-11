@@ -56,7 +56,10 @@ const Details = () => {
   const [showAllActors, setShowAllActors] = useState<boolean>(false);
 
   const toggleFavorite = async () => {
-    if (!user?.uid) return;
+    if (!user?.uid) {
+      navigate("/login");
+      return;
+    }
     if (love) {
       await removeFavorite(id!, user.uid);
     } else {
